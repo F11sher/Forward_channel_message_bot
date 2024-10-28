@@ -12,6 +12,7 @@ from loguru import logger
 from core.handlers.basic import get_start, get_mailed_message
 from core.settings import settings
 from core.utils.commands import set_commands
+from core.middlewares.media_group_middlewares import MediaGroupMiddleware
 
 
 @logger.catch
@@ -42,6 +43,7 @@ async def start():
     dp = Dispatcher(storage=MemoryStorage())
 
     dp.message.middleware.register(ChatActionMiddleware())
+    dp.channel_post.middleware.register(MediaGroupMiddleware())
 
     dp.startup.register(start_bot)
     dp.shutdown.register(stop_bot)
