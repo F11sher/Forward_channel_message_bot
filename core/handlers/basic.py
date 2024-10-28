@@ -21,25 +21,31 @@ async def get_start(message: Message, bot: Bot):
         with open('users_data.json', 'w', encoding='utf-8') as j_file:
             json.dump(current_users, j_file, indent=4)
 
-        await bot.send_message(user_id, 'Вы подписаны на рассылку!')
+        await bot.send_message(user_id, '<i>Вы подписаны на рассылку!</i>')
         logger.info(f'Новый пользователь подписан на рассылку: {message.from_user.username}({user_id})')
-        await bot.send_message(settings.bots.admin_id, 'Новый пользователь подписался на рассылку:\n'
+        await bot.send_message(settings.bots.admin_id, 'Admin message: <b>Новый пользователь подписался '
+                                                       'на рассылку:</b>\n'
                                                        f'ID: {user_id}\n'
                                                        f'Username: {message.from_user.username}')
 
 
 @logger.catch
-async def get_mailed_message(message: Message, bot: Bot):
+async def get_mailed_message(message: Message, bot: Bot, album: list = None):
     logger.debug(f'Получено новое сообщение в группе: {message.chat.username}({message.chat.id})')
     with open('users_data.json', 'r') as file:
         current_users = json.load(file)
 
     success_mail = 0
     error_mail = 0
+
     for user in current_users:
         if current_users[user]:
             try:
-                await bot.forward_message(int(user), message.chat.id, message.message_id)
+                if album:
+                    await bot.forward_messages(int(user), message.chat.id, album)
+
+                else:
+                    await bot.forward_message(int(user), message.chat.id, message.message_id)
                 success_mail += 1
 
             except Exception as ex:
