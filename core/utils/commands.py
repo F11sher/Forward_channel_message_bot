@@ -7,6 +7,10 @@ async def set_commands(bot: Bot):
         BotCommand(
             command='start',
             description='Подписаться на рассылку'
+        ),
+        BotCommand(
+            command='stop',
+            description='Отменить подписку'
         )
     ]
 
