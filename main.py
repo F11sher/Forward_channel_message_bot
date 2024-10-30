@@ -9,7 +9,7 @@ from aiogram.utils.chat_action import ChatActionMiddleware
 
 from loguru import logger
 
-from core.handlers.basic import get_start, get_mailed_message
+from core.handlers.basic import get_start, get_stop, get_mailed_message
 from core.settings import settings
 from core.utils.commands import set_commands
 from core.middlewares.media_group_middlewares import MediaGroupMiddleware
@@ -49,6 +49,7 @@ async def start():
     dp.shutdown.register(stop_bot)
 
     dp.message.register(get_start, Command(commands=['start']), flags={'chat_action': 'typing'})
+    dp.message.register(get_stop, Command(commands=['stop']), flags={'chat_action': 'typing'})
 
     dp.channel_post.register(get_mailed_message,
                              F.chat.id == -1002290641730,
