@@ -16,15 +16,36 @@ async def get_start(message: Message, bot: Bot):
 
     if user_id not in list(current_users.keys()) or not current_users[user_id]:
         current_users[user_id] = True
-        print(current_users)
 
         with open('users_data.json', 'w', encoding='utf-8') as j_file:
             json.dump(current_users, j_file, indent=4)
 
-        await bot.send_message(user_id, '<i>Вы подписаны на рассылку!</i>')
+        await bot.send_message(user_id, '<i>Вы успешно подписались на рассылку!</i>')
         logger.info(f'Новый пользователь подписан на рассылку: {message.from_user.username}({user_id})')
         await bot.send_message(settings.bots.admin_id, 'Admin message: <b>Новый пользователь подписался '
                                                        'на рассылку:</b>\n'
+                                                       f'ID: {user_id}\n'
+                                                       f'Username: {message.from_user.username}')
+
+
+@logger.catch
+async def get_stop(message: Message, bot: Bot):
+    user_id = str(message.from_user.id)
+
+    with open('users_data.json', 'r') as file:
+        current_users = json.load(file)
+
+    if user_id not in list(current_users.keys()) or not current_users[user_id]:
+        await bot.send_message(user_id, '<i>Вы не подписаны на рассылку.</i>')
+
+    else:
+        current_users[user_id] = False
+        with open('users_data.json', 'w', encoding='utf-8') as j_file:
+            json.dump(current_users, j_file, indent=4)
+
+        await bot.send_message(user_id, '<i>Подписка на рассылку отменена.</i>')
+        logger.info(f'Пользователь отписался от рассылки: {message.from_user.username}({user_id})')
+        await bot.send_message(settings.bots.admin_id, 'Admin message: <b>Пользователь отписался от рассылки:</b>\n'
                                                        f'ID: {user_id}\n'
                                                        f'Username: {message.from_user.username}')
 
