@@ -27,6 +27,9 @@ async def get_start(message: Message, bot: Bot):
                                                        f'ID: {user_id}\n'
                                                        f'Username: {message.from_user.username}')
 
+    else:
+        await bot.send_message(user_id, '<i>Подписка на рассылку уже активирована!</i>')
+
 
 @logger.catch
 async def get_stop(message: Message, bot: Bot):
@@ -52,7 +55,7 @@ async def get_stop(message: Message, bot: Bot):
 
 @logger.catch
 async def get_mailed_message(message: Message, bot: Bot, album: list = None):
-    logger.debug(f'Получено новое сообщение в группе: {message.chat.username}({message.chat.id})')
+    logger.debug(f'Получено новое сообщение в канале: {message.chat.username}({message.chat.id})')
     with open('users_data.json', 'r') as file:
         current_users = json.load(file)
 
