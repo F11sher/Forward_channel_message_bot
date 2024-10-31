@@ -52,7 +52,7 @@ async def start():
     dp.message.register(get_stop, Command(commands=['stop']), flags={'chat_action': 'typing'})
 
     dp.channel_post.register(get_mailed_message,
-                             F.chat.id == -1002290641730,
+                             # F.chat.id == -1002290641730,
                              flags={'chat_action': 'typing'})
 
     try:
